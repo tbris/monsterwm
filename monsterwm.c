@@ -939,7 +939,7 @@ void setfullscreen(Client *c, Desktop *d, Bool fullscrn) {
     if (fullscrn != c->isfull) XChangeProperty(dis, c->win,
             netatoms[NET_WM_STATE], XA_ATOM, 32, PropModeReplace, (unsigned char*)
             ((c->isfull = fullscrn) ? &netatoms[NET_FULLSCREEN]:0), fullscrn);
-    if (fullscrn) XMoveResizeWindow(dis, c->win, 0, 0, ww, wh + PANEL_HEIGHT);
+    if (fullscrn) XMoveResizeWindow(dis, c->win, 0, 0, ww, wh);
     XSetWindowBorderWidth(dis, c->win, (c->isfull || !d->head->next ? 0:BORDER_WIDTH));
 }
 
@@ -955,7 +955,7 @@ void setup(void) {
 
     /* screen width and height */
     ww = XDisplayWidth(dis,  screen);
-    wh = XDisplayHeight(dis, screen) - PANEL_HEIGHT;
+    wh = XDisplayHeight(dis, screen);
 
     /* initialize mode for each desktop */
     for (unsigned int d = 0; d < DESKTOPS; d++) desktops[d] = (Desktop){ .mode = DEFAULT_MODE };
@@ -1080,11 +1080,11 @@ void switch_mode(const Arg *arg) {
 
 /**
  * tile clients of the given desktop with the desktop's mode/layout
- * call the tiling handler fucntion taking account the panel height
+ * call the tiling handler function
  */
 void tile(Desktop *d) {
-    if (!d->head || d->mode == FLOAT) return; /* nothing to arange */
-    layout[d->head->next ? d->mode:MONOCLE](0, TOP_PANEL ? PANEL_HEIGHT:0, ww, wh, d);
+    if (!d->head || d->mode == FLOAT) return; /* nothing to arrange */
+    layout[d->head->next ? d->mode:MONOCLE](0, 0, ww, wh, d);
 }
 
 /**
